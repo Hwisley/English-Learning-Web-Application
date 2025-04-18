@@ -56,7 +56,8 @@ CREATE TABLE source_type (
 -- Create table: script
 CREATE TABLE script (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    title VARCHAR(255) NOT NULL,
+    eng_title VARCHAR(255) NOT NULL,
+    kor_title VARCHAR(255) NOT NULL,
     video_url VARCHAR(2048),
     source_type BIGINT,
     FOREIGN KEY (source_type) REFERENCES source_type(id)
