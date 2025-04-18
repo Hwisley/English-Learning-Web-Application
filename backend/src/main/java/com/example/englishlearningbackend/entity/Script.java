@@ -18,9 +18,13 @@ public class Script {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String title;
+    @Column(name = "eng_title", nullable = false)
+    private String engTitle;
 
+    @Column(name = "kor_title", nullable = false)
+    private String korTitle;
+
+    @Column(name = "video_url")
     private String videoUrl;
 
     @ManyToOne

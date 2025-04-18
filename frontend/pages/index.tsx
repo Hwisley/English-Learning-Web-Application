@@ -3,19 +3,34 @@
 import React, { useState, useRef, useEffect } from 'react';
 import data from '../public/data/data.json';
 
+interface ApiResponse {
+  title: {
+    korean: string;
+    english: string;
+  };
+  sentences: {
+    order: number;
+    korean: string;
+    english: string;
+  }[];
+}
+
 interface Article {
   englishSentences: string[];
   koreanSentences: string[];
 }
 
 export default function EnglishPractice() {
-  // 데이터 파일에서 기사 데이터 가져오기
-  const sampleArticle: Article = data;
-
+  // 상태 변수들
+  const [apiData, setApiData] = useState<ApiResponse | null>(null);
+  const [article, setArticle] = useState<Article>({ englishSentences: [], koreanSentences: [] });
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  
   const [currentIndex, setCurrentIndex] = useState(0);
   const [userInput, setUserInput] = useState('');
   const [completedSentences, setCompletedSentences] = useState<string[]>([]);
-  const [remainingSentences, setRemainingSentences] = useState<string[]>(sampleArticle.koreanSentences);
+  const [remainingSentences, setRemainingSentences] = useState<string[]>([]);
   const [isCorrect, setIsCorrect] = useState(false);
   const [progress, setProgress] = useState(0);
   const [typewriterText, setTypewriterText] = useState('');
@@ -29,6 +44,66 @@ export default function EnglishPractice() {
   const errorSoundRef = useRef<HTMLAudioElement>(null);
   const autoCorrectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
+  // API에서 데이터 가져오기
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        // 여기에서 실제 API 호출을 수행합니다.
+        // 현재는 예시로 데이터를 직접 불러오는 방식을 사용하지만,
+        // 실제 구현에서는 fetch 또는 axios를 통해 API를 호출해야 합니다.
+        
+        // 예시 API 호출:
+        // const response = await fetch('/api/articles');
+        // const data = await response.json();
+        
+        // 임시로 하드코딩된 데이터 사용 (테스트 데이터 추가)
+        const mockApiResponse: ApiResponse = {
+          title: {
+            korean: "[테스트] 틱톡 서비스 복구됐지만, 미래는 불확실",
+            english: "[TEST] TikTok Services Restored, But Future Remains Uncertain"
+          },
+          sentences: [
+            {
+              order: 1,
+              korean: "이것은 테스트입니다.",
+              english: "This is for test."
+            },
+            {
+              order: 2,
+              korean: "도널드 트럼프 대통령이 틱톡 금지 조치를 연기하겠다고 발표한 후, 미국 내 틱톡 사용자들은 일요일에 다시 앱을 사용할 수 있게 되었다.",
+              english: "After President Donald Trump announced he would delay the TikTok ban, TikTok users in the United States were able to use the app again on Sunday."
+            },
+            {
+              order: 3,
+              korean: "월요일, 그는 75일 동안 금지를 연기하는 행정 명령에 서명했다.",
+              english: "On Monday, he signed an executive order delaying the ban for 75 days."
+            }
+          ]
+        };
+        
+        setApiData(mockApiResponse);
+        
+        // API 응답 구조를 애플리케이션 내부 구조로 변환
+        const formattedArticle: Article = {
+          englishSentences: mockApiResponse.sentences.map(s => s.english),
+          koreanSentences: mockApiResponse.sentences.map(s => s.korean)
+        };
+        
+        setArticle(formattedArticle);
+        setRemainingSentences(formattedArticle.koreanSentences);
+        setError(null);
+      } catch (err) {
+        console.error('데이터 가져오기 오류:', err);
+        setError('데이터를 불러오는 중 오류가 발생했습니다.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   useEffect(() => {
     // 초기 렌더링 시 입력 필드에 포커스
     if (inputRef.current) {
@@ -38,13 +113,15 @@ export default function EnglishPractice() {
 
   useEffect(() => {
     // 남은 문장들 업데이트
-    setRemainingSentences(sampleArticle.koreanSentences.slice(currentIndex));
+    if (article.koreanSentences.length > 0) {
+      setRemainingSentences(article.koreanSentences.slice(currentIndex));
+    }
     
     // 진행 상황 퍼센트 계산
-    if (sampleArticle.englishSentences.length > 0) {
-      setProgress((currentIndex / sampleArticle.englishSentences.length) * 100);
+    if (article.englishSentences.length > 0) {
+      setProgress((currentIndex / article.englishSentences.length) * 100);
     }
-  }, [currentIndex]);
+  }, [currentIndex, article]);
 
   // 타자 소리 재생
   const playTypingSound = () => {
@@ -90,12 +167,12 @@ export default function EnglishPractice() {
 
   // 실시간 입력 피드백
   const checkInputCorrectness = (input: string) => {
-    if (!input) {
+    if (!input || article.englishSentences.length === 0) {
       setInputFeedback(null);
       return;
     }
     
-    const correctAnswer = sampleArticle.englishSentences[currentIndex];
+    const correctAnswer = article.englishSentences[currentIndex];
     const inputWords = input.toLowerCase().trim().split(' ');
     const answerWords = correctAnswer.toLowerCase().trim().split(' ');
     
@@ -112,9 +189,9 @@ export default function EnglishPractice() {
 
   // 단순화된 교정 함수 - 대소문자와 특수문자만 교정
   const simpleCorrectionCheck = (currentInput: string = userInput) => {
-    if (!currentInput.trim()) return; // 입력이 비어있으면 무시
+    if (!currentInput.trim() || article.englishSentences.length === 0) return; // 입력이 비어있거나 데이터가 없으면 무시
     
-    const correctAnswer = sampleArticle.englishSentences[currentIndex];
+    const correctAnswer = article.englishSentences[currentIndex];
     // 특수문자 제거
     const normalizeText = (text: string) => text.toLowerCase().replace(/[^a-z0-9\s]/gi, '').trim();
     const normalizedInput = normalizeText(currentInput);
@@ -181,9 +258,11 @@ export default function EnglishPractice() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
+    if (article.englishSentences.length === 0) return; // 데이터가 없으면 무시
+    
     // 사용자 입력과 정답 비교 (대소문자 무시, 공백 정규화)
     const normalizedInput = userInput.trim().toLowerCase();
-    const normalizedAnswer = sampleArticle.englishSentences[currentIndex].trim().toLowerCase();
+    const normalizedAnswer = article.englishSentences[currentIndex].trim().toLowerCase();
     
     if (normalizedInput === normalizedAnswer) {
       // 정답 소리 재생
@@ -193,11 +272,11 @@ export default function EnglishPractice() {
       setIsCorrect(true);
       
       // 타자기 효과로 정답 보여주기
-      typewriterEffect(sampleArticle.englishSentences[currentIndex]);
+      typewriterEffect(article.englishSentences[currentIndex]);
       
       // 애니메이션 효과 후 상태 업데이트
       setTimeout(() => {
-        setCompletedSentences([...completedSentences, sampleArticle.englishSentences[currentIndex]]);
+        setCompletedSentences([...completedSentences, article.englishSentences[currentIndex]]);
         setCurrentIndex(currentIndex + 1);
         setUserInput('');
         setIsCorrect(false);
@@ -260,9 +339,44 @@ export default function EnglishPractice() {
     }
   };
 
+  // 로딩 상태 표시
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
+  
+  // 오류 상태 표시
+  if (error) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="text-red-500 text-xl">{error}</div>
+      </div>
+    );
+  }
+  
+  // 데이터가 없는 경우
+  if (!apiData || article.englishSentences.length === 0) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="text-gray-500 text-xl">데이터가 없습니다.</div>
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-4xl mx-auto p-4 bg-gray-100 min-h-screen" style={{ fontFamily: 'Times New Roman', backgroundImage: 'url("https://claude.ai/new")', backgroundSize: 'cover' }}>
-      <h1 className="text-3xl font-bold mb-6 text-center border-b-2 border-gray-800 pb-2">CNN 기사로 영어 공부하기</h1>
+      <h1 className="text-3xl font-bold mb-6 text-center border-b-2 border-gray-800 pb-2">
+        {apiData?.title.english || 'CNN 기사로 영어 공부하기'}
+      </h1>
+      
+      {/* 테스트 배너 표시 */}
+      <div className="mb-4 bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-3 rounded">
+        <p className="font-bold">테스트 모드 활성화됨</p>
+        <p className="text-sm">API로부터 테스트 데이터를 불러옵니다.</p>
+      </div>
       
       {/* 오디오 요소들 (화면에 보이지 않음) */}
       <audio ref={typingSoundRef} src="https://www.fesliyanstudios.com/play-mp3/6" preload="auto"></audio>
@@ -286,7 +400,7 @@ export default function EnglishPractice() {
           ))}
           {isCorrect && (
             <p className="mb-2 text-black font-medium typewriter">
-              {isTyping ? typewriterText : sampleArticle.englishSentences[currentIndex]}
+              {isTyping ? typewriterText : article.englishSentences[currentIndex]}
               <span className="cursor animate-blink">|</span>
             </p>
           )}
@@ -297,7 +411,7 @@ export default function EnglishPractice() {
       </div>
       
       {/* 현재 번역할 한국어 문장 및 입력 섹션 통합 */}
-      {currentIndex < sampleArticle.englishSentences.length ? (
+      {currentIndex < article.englishSentences.length ? (
         <div className={`mb-6 p-4 rounded-lg transition-colors duration-300 ${isCorrect ? 'bg-green-50' : 'bg-amber-50'} border border-gray-400 shadow-md`}>
           <h2 className="text-lg font-bold mb-2 border-b border-gray-400 pb-1">{sampleArticle.koreanSentences[currentIndex]}</h2>
           <form onSubmit={handleSubmit} className="mt-4" data-testid="translation-form">

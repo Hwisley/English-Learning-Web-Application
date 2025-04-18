@@ -9,12 +9,12 @@ import java.util.Optional;
 
 @Repository
 public interface ScriptRepository extends JpaRepository<Script, Long> {
-    
     Optional<Script> findByEngTitle(String engTitle);
     
-    @Query("SELECT DISTINCT s FROM Script s JOIN FETCH s.scriptMappings sm JOIN FETCH sm.sentence WHERE s.id = :id")
-    Optional<Script> findByIdWithSentences(Long id);
+    @Query("SELECT s FROM Script s LEFT JOIN FETCH s.scriptMappings sm LEFT JOIN FETCH sm.sentence WHERE s.id = :scriptId")
+    Optional<Script> findByIdWithSentences(Long scriptId);
     
-    @Query("SELECT DISTINCT s FROM Script s JOIN FETCH s.scriptMappings sm JOIN FETCH sm.sentence WHERE s.engTitle = :engTitle")
+    @Query("SELECT s FROM Script s LEFT JOIN FETCH s.scriptMappings sm LEFT JOIN FETCH sm.sentence WHERE s.engTitle = :engTitle")
+
     Optional<Script> findByEngTitleWithSentences(String engTitle);
 } 

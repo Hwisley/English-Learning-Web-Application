@@ -8,6 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface SourceTypeRepository extends JpaRepository<SourceType, Long> {
-    
     Optional<SourceType> findByAlias(String alias);
 } 

@@ -8,6 +8,5 @@ import java.util.List;
 
 @Repository
 public interface ScriptMappingRepository extends JpaRepository<ScriptMapping, Long> {
-    
     List<ScriptMapping> findByScriptIdOrderByOrder(Long scriptId);
 } 
