@@ -1,37 +1,38 @@
 /// <reference types="cypress" />
 // ***********************************************
-// This example commands.ts shows you how to
-// create various custom commands and overwrite
-// existing commands.
+// This file can be used to create custom commands
+// and overwrite existing commands.
 //
-// For more comprehensive examples of custom
-// commands please read more here:
+// For more information on custom commands see:
 // https://on.cypress.io/custom-commands
 // ***********************************************
-//
-//
+
 // -- This is a parent command --
 // Cypress.Commands.add('login', (email, password) => { ... })
-//
-//
+
 // -- This is a child command --
 // Cypress.Commands.add('drag', { prevSubject: 'element'}, (subject, options) => { ... })
-//
-//
+
 // -- This is a dual command --
 // Cypress.Commands.add('dismiss', { prevSubject: 'optional'}, (subject, options) => { ... })
-//
-//
+
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
-//
-// declare global {
-//   namespace Cypress {
-//     interface Chainable {
-//       login(email: string, password: string): Chainable<void>
-//       drag(subject: string, options?: Partial<TypeOptions>): Chainable<Element>
-//       dismiss(subject: string, options?: Partial<TypeOptions>): Chainable<Element>
-//       visit(originalFn: CommandOriginalFn, url: string, options: Partial<VisitOptions>): Chainable<Element>
-//     }
-//   }
-// }
+
+// Custom command example:
+Cypress.Commands.add('typeCorrectAnswer', (selector: string, correctAnswer: string) => {
+  cy.get(selector).type(correctAnswer)
+  cy.get('form').submit()
+})
+
+declare global {
+  namespace Cypress {
+    interface Chainable {
+      /**
+       * Custom command to type correct answer and submit the form
+       * @example cy.typeCorrectAnswer('input[type="text"]', 'Hello World')
+       */
+      typeCorrectAnswer(selector: string, correctAnswer: string): Chainable<Element>
+    }
+  }
+} 

@@ -39,21 +39,55 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
 
-## API 연동 설정
+## Testing
 
-이 프로젝트는 백엔드 API와 연동되어 있습니다. 올바른 연동을 위해 다음 단계를 따르세요:
+This project uses Jest for unit and integration tests, and Cypress for end-to-end testing.
 
-1. `.env.local` 파일에 백엔드 API URL을 설정합니다:
+### Unit and Integration Tests
+
+To run unit and integration tests:
+
+```bash
+# Run all tests
+npm test
+
+# Run tests in watch mode
+npm run test:watch
+
+# Generate coverage report
+npm run test:coverage
+```
+
+### End-to-End Tests
+
+To run end-to-end tests with Cypress:
+
+```bash
+# Open Cypress test runner in interactive mode
+npm run cypress
+
+# Run Cypress tests in headless mode
+npm run cypress:headless
+
+# Start the development server and open Cypress
+npm run e2e
+```
+
+## API Integration Setup
+
+This project is integrated with a backend API. Follow these steps for proper integration:
+
+1. Set the backend API URL in `.env.local`:
    ```
    NEXT_PUBLIC_API_URL=http://localhost:8080/api
    ```
 
-2. 백엔드 서버가 실행 중인지 확인합니다.
+2. Ensure the backend server is running.
 
-3. API 응답 형식은 다음과 같이 정의되어 있습니다:
-   - 모든 비디오 목록: `/api/videos`
-   - 카테고리별 비디오 목록: `/api/videos/category/{category}`
-   - 비디오 상세 정보: `/api/videos/{id}`
-   - 비디오 문장 목록: `/api/videos/{id}/sentences`
+3. API endpoints are defined as follows:
+   - All video listings: `/api/videos`
+   - Videos by category: `/api/videos/category/{category}`
+   - Video details: `/api/videos/{id}`
+   - Video sentence list: `/api/videos/{id}/sentences`
 
-자세한 API 문서는 백엔드 프로젝트의 README 파일을 참조하세요.
+For detailed API documentation, please refer to the README file in the backend project.

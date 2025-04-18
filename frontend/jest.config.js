@@ -1,21 +1,38 @@
 const nextJest = require('next/jest');
 
 const createJestConfig = nextJest({
-  // next.config.js와 .env 파일이 있는 Next.js 앱의 경로
+  // Provide the path to your Next.js app to load next.config.js and .env files
   dir: './',
 });
 
-// Jest에 전달할 사용자 정의 설정
 const customJestConfig = {
+  // Setup file that runs before each test
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
-  moduleNameMapper: {
-    // CSS 모듈 등을 무시하는 핸들러
-    '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
-  },
-  testEnvironment: 'jest-environment-jsdom',
-  moduleDirectories: ['node_modules', '<rootDir>/'],
+
+  // Allow absolute imports
+  moduleDirectories: ['node_modules', '<rootDir>'],
+
+  // Exclude specific paths from testing
   testPathIgnorePatterns: ['<rootDir>/node_modules/', '<rootDir>/.next/'],
+
+  // Use jsdom test environment (required for frontend testing)
+  testEnvironment: 'jest-environment-jsdom',
+
+  // Transform for modern JS/TS using SWC
+  transform: {
+    '^.+\\.(js|jsx|ts|tsx)$': ['@swc/jest'],
+  },
+
+  // Module alias and asset handling
+  moduleNameMapper: {
+    // CSS Modules
+    '^.+\\.module\\.(css|sass|scss)$': 'identity-obj-proxy',
+    // Regular CSS (non-module)
+    '^.+\\.(css|sass|scss)$': '<rootDir>/__mocks__/styleMock.js',
+    // Static assets
+    '^.+\\.(png|jpg|jpeg|gif|webp|avif|ico|bmp|svg)$': '<rootDir>/__mocks__/fileMock.js',
+  },
 };
 
-// createJestConfig는 다음 작업이 필요한 Next.js 구성을 비동기적으로 내보냄
-module.exports = createJestConfig(customJestConfig); 
+// Export the configuration
+module.exports = createJestConfig(customJestConfig);

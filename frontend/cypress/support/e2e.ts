@@ -1,17 +1,19 @@
 // ***********************************************************
-// This example support/e2e.ts is processed and
-// loaded automatically before your test files.
+// This support file is loaded automatically before your tests
+// run in Cypress. You can use this file to define custom commands
+// or override existing ones, set up global hooks, or configure
+// Cypress behavior.
 //
-// This is a great place to put global configuration and
-// behavior that modifies Cypress.
-//
-// You can change the location of this file or turn off
-// automatically serving support files with the
-// 'supportFile' configuration option.
-//
-// You can read more here:
-// https://on.cypress.io/configuration
+// See: https://docs.cypress.io/guides/references/configuration
 // ***********************************************************
 
 // Import commands.js using ES2015 syntax:
 import './commands'
+
+// You can add global hooks or configuration here
+beforeEach(() => {
+  // Global setup for all tests
+})
+
+// Alternatively you can use CommonJS syntax:
+// require('./commands') 

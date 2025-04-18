@@ -270,7 +270,7 @@ export default function EnglishPractice() {
       <audio ref={errorSoundRef} src="https://www.fesliyanstudios.com/play-mp3/41" preload="auto"></audio>
 
       {/* 진행률 표시 */}
-      <div className="mb-6 bg-gray-300 rounded-full h-4 overflow-hidden border border-gray-800">
+      <div className="mb-6 bg-gray-300 rounded-full h-4 overflow-hidden border border-gray-800" data-testid="progress-bar">
         <div 
           className="h-full bg-green-700 transition-all duration-1000 ease-out"
           style={{ width: `${progress}%` }}
@@ -300,7 +300,7 @@ export default function EnglishPractice() {
       {currentIndex < sampleArticle.englishSentences.length ? (
         <div className={`mb-6 p-4 rounded-lg transition-colors duration-300 ${isCorrect ? 'bg-green-50' : 'bg-amber-50'} border border-gray-400 shadow-md`}>
           <h2 className="text-lg font-bold mb-2 border-b border-gray-400 pb-1">{sampleArticle.koreanSentences[currentIndex]}</h2>
-          <form onSubmit={handleSubmit} className="mt-4">
+          <form onSubmit={handleSubmit} className="mt-4" data-testid="translation-form">
             <div className="relative mt-4">
               <input
                 ref={inputRef}
