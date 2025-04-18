@@ -72,3 +72,22 @@ npm run cypress:headless
 # Start the development server and open Cypress
 npm run e2e
 ```
+
+## API Integration Setup
+
+This project is integrated with a backend API. Follow these steps for proper integration:
+
+1. Set the backend API URL in `.env.local`:
+   ```
+   NEXT_PUBLIC_API_URL=http://localhost:8080/api
+   ```
+
+2. Ensure the backend server is running.
+
+3. API endpoints are defined as follows:
+   - All video listings: `/api/videos`
+   - Videos by category: `/api/videos/category/{category}`
+   - Video details: `/api/videos/{id}`
+   - Video sentence list: `/api/videos/{id}/sentences`
+
+For detailed API documentation, please refer to the README file in the backend project.

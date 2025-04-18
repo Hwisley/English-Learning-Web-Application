@@ -1,30 +1,38 @@
-const nextJest = require('next/jest')
+const nextJest = require('next/jest');
 
 const createJestConfig = nextJest({
-  // Provide the path to your Next.js app to load next.config.js and .env files in your test environment
+  // Provide the path to your Next.js app to load next.config.js and .env files
   dir: './',
-})
+});
 
-// Add any custom config to be passed to Jest
 const customJestConfig = {
-  // Add more setup options before each test is run
+  // Setup file that runs before each test
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
-  // if using TypeScript with a baseUrl set to the root directory then you need the below for alias to work
+
+  // Allow absolute imports
   moduleDirectories: ['node_modules', '<rootDir>'],
+
+  // Exclude specific paths from testing
+  testPathIgnorePatterns: ['<rootDir>/node_modules/', '<rootDir>/.next/'],
+
+  // Use jsdom test environment (required for frontend testing)
   testEnvironment: 'jest-environment-jsdom',
+
+  // Transform for modern JS/TS using SWC
   transform: {
     '^.+\\.(js|jsx|ts|tsx)$': ['@swc/jest'],
   },
+
+  // Module alias and asset handling
   moduleNameMapper: {
-    // Handle CSS imports (with CSS modules)
-    // https://jestjs.io/docs/webpack#mocking-css-modules
+    // CSS Modules
     '^.+\\.module\\.(css|sass|scss)$': 'identity-obj-proxy',
-    // Handle CSS imports (without CSS modules)
+    // Regular CSS (non-module)
     '^.+\\.(css|sass|scss)$': '<rootDir>/__mocks__/styleMock.js',
-    // Handle image imports
+    // Static assets
     '^.+\\.(png|jpg|jpeg|gif|webp|avif|ico|bmp|svg)$': '<rootDir>/__mocks__/fileMock.js',
   },
-}
+};
 
-// createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async
-module.exports = createJestConfig(customJestConfig) 
+// Export the configuration
+module.exports = createJestConfig(customJestConfig);

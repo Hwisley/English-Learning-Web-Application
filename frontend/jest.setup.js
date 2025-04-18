@@ -1,17 +1,11 @@
-// Learn more: https://github.com/testing-library/jest-dom
-import '@testing-library/jest-dom'
+// jest-dom은 DOM 노드에 대한 어서션을 위한 커스텀 jest 매처를 추가합니다
+import '@testing-library/jest-dom';
 
-// Mock Service Worker 설정
-// import { server } from './mocks/server'
+// 테스트 중 fetch API 모킹을 위한 설정
+global.fetch = jest.fn();
 
-// // 테스트 전에 MSW 서버 시작
-// beforeAll(() => server.listen())
-
-// // 각 테스트 후에 핸들러 초기화
-// afterEach(() => server.resetHandlers())
-
-// // 모든 테스트가 끝난 후 서버 종료
-// afterAll(() => server.close())
+// 환경 변수 설정
+process.env.NEXT_PUBLIC_API_URL = 'http://localhost:8080/api'; 
 
 // Mock the Next.js router
 jest.mock('next/router', () => ({

@@ -1,5 +1,4 @@
 /// <reference types="cypress" />
-
 // ***********************************************
 // This file can be used to create custom commands
 // and overwrite existing commands.
