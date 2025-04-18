@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -27,5 +28,5 @@ public class Script {
     private SourceType sourceType;
 
     @OneToMany(mappedBy = "script", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ScriptMapping> scriptMappings;
+    private List<ScriptMapping> scriptMappings = new ArrayList<>();
 } 
