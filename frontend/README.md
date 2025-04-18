@@ -38,3 +38,22 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+
+## API 연동 설정
+
+이 프로젝트는 백엔드 API와 연동되어 있습니다. 올바른 연동을 위해 다음 단계를 따르세요:
+
+1. `.env.local` 파일에 백엔드 API URL을 설정합니다:
+   ```
+   NEXT_PUBLIC_API_URL=http://localhost:8080/api
+   ```
+
+2. 백엔드 서버가 실행 중인지 확인합니다.
+
+3. API 응답 형식은 다음과 같이 정의되어 있습니다:
+   - 모든 비디오 목록: `/api/videos`
+   - 카테고리별 비디오 목록: `/api/videos/category/{category}`
+   - 비디오 상세 정보: `/api/videos/{id}`
+   - 비디오 문장 목록: `/api/videos/{id}/sentences`
+
+자세한 API 문서는 백엔드 프로젝트의 README 파일을 참조하세요.
