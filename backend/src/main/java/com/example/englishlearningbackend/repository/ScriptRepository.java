@@ -15,5 +15,6 @@ public interface ScriptRepository extends JpaRepository<Script, Long> {
     Optional<Script> findByIdWithSentences(Long scriptId);
     
     @Query("SELECT s FROM Script s LEFT JOIN FETCH s.scriptMappings sm LEFT JOIN FETCH sm.sentence WHERE s.engTitle = :engTitle")
+
     Optional<Script> findByEngTitleWithSentences(String engTitle);
 } 

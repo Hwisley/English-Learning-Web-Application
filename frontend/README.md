@@ -38,3 +38,56 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+
+## Testing
+
+This project uses Jest for unit and integration tests, and Cypress for end-to-end testing.
+
+### Unit and Integration Tests
+
+To run unit and integration tests:
+
+```bash
+# Run all tests
+npm test
+
+# Run tests in watch mode
+npm run test:watch
+
+# Generate coverage report
+npm run test:coverage
+```
+
+### End-to-End Tests
+
+To run end-to-end tests with Cypress:
+
+```bash
+# Open Cypress test runner in interactive mode
+npm run cypress
+
+# Run Cypress tests in headless mode
+npm run cypress:headless
+
+# Start the development server and open Cypress
+npm run e2e
+```
+
+## API Integration Setup
+
+This project is integrated with a backend API. Follow these steps for proper integration:
+
+1. Set the backend API URL in `.env.local`:
+   ```
+   NEXT_PUBLIC_API_URL=http://localhost:8080/api
+   ```
+
+2. Ensure the backend server is running.
+
+3. API endpoints are defined as follows:
+   - All video listings: `/api/videos`
+   - Videos by category: `/api/videos/category/{category}`
+   - Video details: `/api/videos/{id}`
+   - Video sentence list: `/api/videos/{id}/sentences`
+
+For detailed API documentation, please refer to the README file in the backend project.

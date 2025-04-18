@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -31,8 +32,8 @@ public class Sentence {
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "sentence")
-    private List<WordSentenceMapping> wordMappings;
+    private List<WordSentenceMapping> wordMappings = new ArrayList<>();
 
     @OneToMany(mappedBy = "sentence")
-    private List<ScriptMapping> scriptMappings;
+    private List<ScriptMapping> scriptMappings = new ArrayList<>();
 }
