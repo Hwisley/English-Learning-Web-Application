@@ -1,6 +1,6 @@
 INSERT INTO source_type (alias) VALUES ('Test data');
 
-INSERT INTO script (eng_title, kor_title, source_type) 
+INSERT INTO script (original_title, alias_title, source_type) 
 SELECT 'UN Climate Change', '유엔 기후 변화', id 
 FROM source_type 
 WHERE alias = 'Test data';
@@ -11,7 +11,7 @@ VALUES ('The United Nations called for immediate action on climate change.',
 INSERT INTO script_mapping(script_id, sentence_id, `order`) 
 SELECT script.id, LAST_INSERT_ID(), 0 
 FROM script 
-WHERE eng_title = 'UN Climate Change'; 
+WHERE original_title = 'UN Climate Change'; 
 
 INSERT INTO sentence (eng_sentence, kor_sentence) 
 VALUES ('Global temperatures have risen at an alarming rate in the past decade.',
@@ -19,7 +19,7 @@ VALUES ('Global temperatures have risen at an alarming rate in the past decade.'
 INSERT INTO script_mapping(script_id, sentence_id, `order`) 
 SELECT script.id, LAST_INSERT_ID(), 1 
 FROM script 
-WHERE eng_title = 'UN Climate Change'; 
+WHERE original_title = 'UN Climate Change'; 
 
 INSERT INTO sentence (eng_sentence, kor_sentence) 
 VALUES ('Many countries have pledged to reduce carbon emissions by 2030.',
@@ -27,7 +27,7 @@ VALUES ('Many countries have pledged to reduce carbon emissions by 2030.',
 INSERT INTO script_mapping(script_id, sentence_id, `order`) 
 SELECT script.id, LAST_INSERT_ID(), 2 
 FROM script 
-WHERE eng_title = 'UN Climate Change'; 
+WHERE original_title = 'UN Climate Change'; 
 
 INSERT INTO sentence (eng_sentence, kor_sentence) 
 VALUES ('Experts warn that we may soon reach a tipping point.',
@@ -35,7 +35,7 @@ VALUES ('Experts warn that we may soon reach a tipping point.',
 INSERT INTO script_mapping(script_id, sentence_id, `order`) 
 SELECT script.id, LAST_INSERT_ID(), 3 
 FROM script 
-WHERE eng_title = 'UN Climate Change'; 
+WHERE original_title = 'UN Climate Change'; 
 
 INSERT INTO sentence (eng_sentence, kor_sentence) 
 VALUES ('Renewable energy sources are becoming increasingly affordable.',
@@ -43,4 +43,4 @@ VALUES ('Renewable energy sources are becoming increasingly affordable.',
 INSERT INTO script_mapping(script_id, sentence_id, `order`) 
 SELECT script.id, LAST_INSERT_ID(), 4 
 FROM script 
-WHERE eng_title = 'UN Climate Change'; 
+WHERE original_title = 'UN Climate Change'; 
