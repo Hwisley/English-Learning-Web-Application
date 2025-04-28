@@ -1,6 +1,6 @@
 package com.example.englishlearningbackend.controller;
 
-import com.example.englishlearningbackend.entity.Script;
+// import com.example.englishlearningbackend.entity.Script;
 import com.example.englishlearningbackend.entity.SourceType;
 import com.example.englishlearningbackend.dto.ScriptsBySourceTypeDto;
 import com.example.englishlearningbackend.repository.ScriptRepository;
@@ -37,19 +37,19 @@ public class ScriptControllerTest {
         sourceType.setHomeUrl("https://www.youtube.com/");
 
         // 테스트 데이터 준비
-        Script script1 = new Script();
+        ScriptsBySourceTypeDto script1 = new ScriptsBySourceTypeDto();
         script1.setId(1L);
         script1.setOriginalTitle("Test Script 1");
-        script1.setAliasTitle("Test Script 1");
+        // script1.setAliasTitle("Test Script 1");
         script1.setVideoUrl("https://youtu.be/KGcna7MdIho?feature=shared");
-        script1.setSourceType(sourceType);
+        // script1.setSourceType(sourceType);
         
-        Script script2 = new Script();
+        ScriptsBySourceTypeDto script2 = new ScriptsBySourceTypeDto();
         script2.setId(2L);
         script2.setOriginalTitle("Test Script 2");
-        script2.setAliasTitle("Test Script 2");
+        // script2.setAliasTitle("Test Script 2");
         script2.setVideoUrl("https://youtu.be/KGcna7MdIho?feature=shared");
-        script2.setSourceType(sourceType);
+        // script2.setSourceType(sourceType);
         
         List<ScriptsBySourceTypeDto> scripts = Arrays.asList(script1, script2);
         
