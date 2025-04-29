@@ -37,18 +37,18 @@ public class ScriptControllerTest {
         sourceType.setHomeUrl("https://www.youtube.com/");
 
         // 테스트 데이터 준비
-        ScriptsBySourceTypeDto script1 = new ScriptsBySourceTypeDto();
-        script1.setId(1L);
-        script1.setOriginalTitle("Test Script 1");
-        // script1.setAliasTitle("Test Script 1");
-        script1.setVideoUrl("https://youtu.be/KGcna7MdIho?feature=shared");
+        ScriptsBySourceTypeDto script1 = new ScriptsBySourceTypeDto(1L, "Test Script 1", "https://youtu.be/KGcna7MdIho?feature=shared");
+        // script1.setId(1L);
+        // script1.setOriginalTitle("Test Script 1");
+        // // script1.setAliasTitle("Test Script 1");
+        // script1.setVideoUrl("https://youtu.be/KGcna7MdIho?feature=shared");
         // script1.setSourceType(sourceType);
         
-        ScriptsBySourceTypeDto script2 = new ScriptsBySourceTypeDto();
-        script2.setId(2L);
-        script2.setOriginalTitle("Test Script 2");
-        // script2.setAliasTitle("Test Script 2");
-        script2.setVideoUrl("https://youtu.be/KGcna7MdIho?feature=shared");
+        ScriptsBySourceTypeDto script2 = new ScriptsBySourceTypeDto(2L, "Test Script 2", "https://youtu.be/KGcna7MdIho?feature=shared");
+        // script2.setId(2L);
+        // script2.setOriginalTitle("Test Script 2");
+        // // script2.setAliasTitle("Test Script 2");
+        // script2.setVideoUrl("https://youtu.be/KGcna7MdIho?feature=shared");
         // script2.setSourceType(sourceType);
         
         List<ScriptsBySourceTypeDto> scripts = Arrays.asList(script1, script2);
@@ -57,14 +57,15 @@ public class ScriptControllerTest {
         when(scriptRepository.findBySourceType("TEST_YOUTUBE")).thenReturn(scripts);
         
         // API 호출 및 결과 검증
-        mockMvc.perform(get("/api/scripts"))
+        mockMvc.perform(get("/api/scripts?sourceType=TEST_YOUTUBE"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(1))
                 .andExpect(jsonPath("$[0].originalTitle").value("Test Script 1"))
-                .andExpect(jsonPath("$[0].videoUrl").value("TEST_YOUTUBE"))
+                .andExpect(jsonPath("$[0].videoUrl").value("https://youtu.be/KGcna7MdIho?feature=shared"))
                 // .andExpect(jsonPath("$[0].aliasTitle").value("테스트 스크립트 1"))
                 .andExpect(jsonPath("$[1].id").value(2))
                 .andExpect(jsonPath("$[1].originalTitle").value("Test Script 2"))
+                .andExpect(jsonPath("$[1].videoUrl").value("https://youtu.be/KGcna7MdIho?feature=shared"));
                 // .andExpect(jsonPath("$[1].aliasTitle").value("테스트 스크립트 2"));
     }
     
