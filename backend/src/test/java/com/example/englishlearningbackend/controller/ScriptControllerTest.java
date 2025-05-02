@@ -57,7 +57,7 @@ public class ScriptControllerTest {
         when(scriptRepository.findBySourceType("TEST_YOUTUBE")).thenReturn(scripts);
         
         // API 호출 및 결과 검증
-        mockMvc.perform(get("/api/scripts?sourceType=TEST_YOUTUBE"))
+        mockMvc.perform(get("/api/contents?sourceType=TEST_YOUTUBE"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(1))
                 .andExpect(jsonPath("$[0].originalTitle").value("Test Script 1"))

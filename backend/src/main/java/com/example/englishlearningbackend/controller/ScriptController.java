@@ -19,7 +19,7 @@ public class ScriptController {
         this.scriptRepository = scriptRepository;
     }
     
-    @GetMapping("/api/scripts")
+    @GetMapping("/api/contents")
     public ResponseEntity<List<ScriptsBySourceTypeDto>> getScriptsBySourceType(@RequestParam String sourceType) {
         return ResponseEntity.ok(scriptRepository.findBySourceType(sourceType));
     }
