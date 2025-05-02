@@ -3,7 +3,7 @@ INSERT INTO source_type (alias) VALUES ('ybm-cnn');
 INSERT INTO script (original_title, alias_title, source_type) 
 SELECT 'UN Climate Change', '유엔 기후 변화', id 
 FROM source_type 
-WHERE alias = 'TEST-ybm-cnn';
+WHERE alias = 'ybm-cnn';
 
 INSERT INTO sentence (eng_sentence, kor_sentence) 
 VALUES ('The United Nations called for immediate action on climate change.', 
