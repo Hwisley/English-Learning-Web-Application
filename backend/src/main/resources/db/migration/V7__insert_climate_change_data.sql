@@ -1,4 +1,4 @@
-INSERT INTO source_type (alias) VALUES ('Test data');
+INSERT INTO source_type (alias) VALUES ('TestData');
 
 INSERT INTO script (original_title, alias_title, source_type) 
 SELECT 'UN Climate Change', '유엔 기후 변화', id 
