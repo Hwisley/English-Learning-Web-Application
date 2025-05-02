@@ -34,21 +34,21 @@ const Main_Page: React.FC = () => {
         setLoading(true);
         
         // Lv Academy videos
-        const lvAcademyResponse = await fetch('/api/youtube/lv-academy');
+        const lvAcademyResponse = await fetch('/api/contents?source_type=lv-academy');
         const lvAcademyData = await lvAcademyResponse.json();
         // Filter only live videos
         const liveLvAcademyVideos = lvAcademyData.filter((video: VideoItem) => video.isLive);
         setLvAcademyVideos(liveLvAcademyVideos);
 
         // Toddler videos
-        const toddlerResponse = await fetch('/api/youtube/toddler');
+        const toddlerResponse = await fetch('/api/contents?source_type=toddler');
         const toddlerData = await toddlerResponse.json();
         // Filter only live videos
         const liveToddlerVideos = toddlerData.filter((video: VideoItem) => video.isLive);
         setToddlerVideos(liveToddlerVideos);
 
         // News articles
-        const newsResponse = await fetch('/api/news');
+        const newsResponse = await fetch('/api/contents?source_type=news');
         const newsData = await newsResponse.json();
         // Sort by most recent
         const sortedNews = newsData.sort((a: NewsItem, b: NewsItem) => 
