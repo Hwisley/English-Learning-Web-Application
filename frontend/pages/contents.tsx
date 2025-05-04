@@ -32,17 +32,17 @@ const Main_Page: React.FC = () => {
         setLoading(true);
         
         // Lv Academy videos
-        const lvAcademyResponse = await fetch('http://222.108.148.221:8080/api/contents?sourceType=lv-academy');
+        const lvAcademyResponse = await fetch('http://localhost:8080/api/contents?sourceType=lv-academy');
         const lvAcademyData = await lvAcademyResponse.json();
         setLvAcademyVideos(lvAcademyData);
 
         // Toddler videos
-        const toddlerResponse = await fetch('http://222.108.148.221:8080/api/contents?sourceType=lv-academy-toddler');
+        const toddlerResponse = await fetch('http://localhost:8080/api/contents?sourceType=lv-academy-toddler');
         const toddlerData = await toddlerResponse.json();
         setToddlerVideos(toddlerData);
 
         // News articles
-        const newsResponse = await fetch('http://222.108.148.221:8080/api/contents?sourceType=ybm-cnn');
+        const newsResponse = await fetch('http://localhost:8080/api/contents?sourceType=ybm-cnn');
         const newsData = await newsResponse.json();
         setNewsArticles(newsData);
 
