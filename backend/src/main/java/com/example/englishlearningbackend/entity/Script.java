@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,11 +19,14 @@ public class Script {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "eng_title", nullable = false)
-    private String engTitle;
+    @Column(name = "original_title", nullable = false)
+    private String originalTitle;
 
-    @Column(name = "kor_title", nullable = false)
-    private String korTitle;
+    @Column(name = "alias_title")
+    private String aliasTitle;
+
+    @Column(name = "source_published_at")
+    private LocalDateTime sourcePublishedAt;
 
     @Column(name = "video_url")
     private String videoUrl;

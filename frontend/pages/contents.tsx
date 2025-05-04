@@ -3,18 +3,16 @@ import { format } from 'date-fns';
 
 interface VideoItem {
   id: string;
-  title: string;
-  thumbnailUrl: string;
-  publishedAt: string;
-  channelId: string;
-  isLive?: boolean;
+  originalTitle: string;
+  videoUrl: string;
+  publishedAt?: string;
 }
 
 interface NewsItem {
   id: string;
-  title: string;
-  link: string;
-  publishedAt: string;
+  originalTitle: string;
+  videoUrl: string;
+  publishedAt?: string;
 }
 
 const Main_Page: React.FC = () => {
@@ -34,27 +32,19 @@ const Main_Page: React.FC = () => {
         setLoading(true);
         
         // Lv Academy videos
-        const lvAcademyResponse = await fetch('/api/youtube/lv-academy');
+        const lvAcademyResponse = await fetch('http://localhost:8080/api/contents?sourceType=lv-academy');
         const lvAcademyData = await lvAcademyResponse.json();
-        // Filter only live videos
-        const liveLvAcademyVideos = lvAcademyData.filter((video: VideoItem) => video.isLive);
-        setLvAcademyVideos(liveLvAcademyVideos);
+        setLvAcademyVideos(lvAcademyData);
 
         // Toddler videos
-        const toddlerResponse = await fetch('/api/youtube/toddler');
+        const toddlerResponse = await fetch('http://localhost:8080/api/contents?sourceType=lv-academy-toddler');
         const toddlerData = await toddlerResponse.json();
-        // Filter only live videos
-        const liveToddlerVideos = toddlerData.filter((video: VideoItem) => video.isLive);
-        setToddlerVideos(liveToddlerVideos);
+        setToddlerVideos(toddlerData);
 
         // News articles
-        const newsResponse = await fetch('/api/news');
+        const newsResponse = await fetch('http://localhost:8080/api/contents?sourceType=ybm-cnn');
         const newsData = await newsResponse.json();
-        // Sort by most recent
-        const sortedNews = newsData.sort((a: NewsItem, b: NewsItem) => 
-          new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
-        );
-        setNewsArticles(sortedNews);
+        setNewsArticles(newsData);
 
         setError(null);
       } catch (err) {
@@ -68,7 +58,8 @@ const Main_Page: React.FC = () => {
     fetchData();
   }, []);
 
-  const isNewContent = (date: string) => {
+  const isNewContent = (date: string | undefined) => {
+    if (!date) return false;
     const contentDate = new Date(date);
     const now = new Date();
     const diffDays = Math.floor((now.getTime() - contentDate.getTime()) / (1000 * 60 * 60 * 24));
@@ -134,8 +125,8 @@ const Main_Page: React.FC = () => {
                 <div key={video.id} className="flex-none w-64">
                   <div className="relative">
                     <img
-                      src={video.thumbnailUrl}
-                      alt={video.title}
+                      src={video.videoUrl}
+                      alt={video.originalTitle}
                       className="w-full h-36 object-cover rounded-lg"
                     />
                     {isNewContent(video.publishedAt) && (
@@ -143,14 +134,13 @@ const Main_Page: React.FC = () => {
                         New
                       </span>
                     )}
-                    <span className="absolute bottom-2 right-2 bg-red-600 text-white px-2 py-1 rounded-full text-sm">
-                      LIVE
-                    </span>
                   </div>
-                  <h3 className="mt-2 font-semibold line-clamp-2">{video.title}</h3>
-                  <p className="text-sm text-gray-600">
-                    {format(new Date(video.publishedAt), 'yyyy-MM-dd')}
-                  </p>
+                  <h3 className="mt-2 font-semibold line-clamp-2">{video.originalTitle}</h3>
+                  {video.publishedAt && (
+                    <p className="text-sm text-gray-600">
+                      {format(new Date(video.publishedAt), 'yyyy-MM-dd')}
+                    </p>
+                  )}
                 </div>
               ))
             ) : (
@@ -199,8 +189,8 @@ const Main_Page: React.FC = () => {
                 <div key={video.id} className="flex-none w-64">
                   <div className="relative">
                     <img
-                      src={video.thumbnailUrl}
-                      alt={video.title}
+                      src={video.videoUrl}
+                      alt={video.originalTitle}
                       className="w-full h-36 object-cover rounded-lg"
                     />
                     {isNewContent(video.publishedAt) && (
@@ -208,14 +198,13 @@ const Main_Page: React.FC = () => {
                         New
                       </span>
                     )}
-                    <span className="absolute bottom-2 right-2 bg-red-600 text-white px-2 py-1 rounded-full text-sm">
-                      LIVE
-                    </span>
                   </div>
-                  <h3 className="mt-2 font-semibold line-clamp-2">{video.title}</h3>
-                  <p className="text-sm text-gray-600">
-                    {format(new Date(video.publishedAt), 'yyyy-MM-dd')}
-                  </p>
+                  <h3 className="mt-2 font-semibold line-clamp-2">{video.originalTitle}</h3>
+                  {video.publishedAt && (
+                    <p className="text-sm text-gray-600">
+                      {format(new Date(video.publishedAt), 'yyyy-MM-dd')}
+                    </p>
+                  )}
                 </div>
               ))
             ) : (
@@ -247,17 +236,19 @@ const Main_Page: React.FC = () => {
               newsArticles.map((article) => (
                 <li key={article.id} className="p-4 hover:bg-gray-50 transition-colors">
                   <a
-                    href={article.link}
+                    href={article.videoUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="block"
                   >
                     <h3 className="text-lg font-medium text-gray-900 hover:text-blue-600">
-                      {article.title}
+                      {article.originalTitle}
                     </h3>
-                    <p className="text-sm text-gray-500 mt-1">
-                      {format(new Date(article.publishedAt), 'yyyy-MM-dd')}
-                    </p>
+                    {article.publishedAt && (
+                      <p className="text-sm text-gray-500 mt-1">
+                        {format(new Date(article.publishedAt), 'yyyy-MM-dd')}
+                      </p>
+                    )}
                   </a>
                 </li>
               ))

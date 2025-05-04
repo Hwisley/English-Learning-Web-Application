@@ -6,20 +6,27 @@ export interface Video {
   id: string;
   title: string;
   thumbnail: string;
-  channelName: string;
+  channelName?: string;
   isLive?: boolean;
+  publishedAt: string;
 }
 
 // 문장 데이터 타입 정의
 export interface Sentence {
-  korean: string;
-  english: string;
+  time?: number;
   timestamp?: number;
+  english: string;
+  korean: string;
 }
 
 // 비디오 상세 정보 타입 정의
 export interface VideoDetail {
+  id: string;
   title: string;
+  description: string;
+  videoUrl: string;
+  thumbnailUrl: string;
+  publishedAt: string;
   sentences: Sentence[];
 }
 

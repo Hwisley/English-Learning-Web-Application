@@ -19,7 +19,8 @@ public class EnglishLearningBackendApplication {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:3000") // Next.js의 기본 포트
+                        .allowedOrigins("http://localhost:3000", 
+                                                    "http://222.108.148.221:3000") // Next.js의 기본 포트
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
                         .allowCredentials(true);

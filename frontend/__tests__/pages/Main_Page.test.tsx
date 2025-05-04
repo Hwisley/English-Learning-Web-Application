@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
-import Main_Page from '../../pages/Main_Page';
+import Main_Page from '../../pages/contents';
 import '@testing-library/jest-dom';
 
 // 모의 데이터 정의

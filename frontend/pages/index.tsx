@@ -413,7 +413,7 @@ export default function EnglishPractice() {
       {/* 현재 번역할 한국어 문장 및 입력 섹션 통합 */}
       {currentIndex < article.englishSentences.length ? (
         <div className={`mb-6 p-4 rounded-lg transition-colors duration-300 ${isCorrect ? 'bg-green-50' : 'bg-amber-50'} border border-gray-400 shadow-md`}>
-          <h2 className="text-lg font-bold mb-2 border-b border-gray-400 pb-1">{sampleArticle.koreanSentences[currentIndex]}</h2>
+          <h2 className="text-lg font-bold mb-2 border-b border-gray-400 pb-1">{article.koreanSentences[currentIndex]}</h2>
           <form onSubmit={handleSubmit} className="mt-4" data-testid="translation-form">
             <div className="relative mt-4">
               <input
