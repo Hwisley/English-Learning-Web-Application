@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { format } from 'date-fns';
+import { useRouter } from 'next/router';
 
 interface VideoItem {
   id: string;
@@ -27,6 +28,45 @@ interface NewsSectionProps {
   title: string;
   articles: NewsItem[];
 }
+
+const SearchBar: React.FC = () => {
+  const [url, setUrl] = useState('');
+  const router = useRouter();
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (url.trim()) {
+      router.push({
+        pathname: '/',
+        query: { url: url.trim() }
+      });
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="mb-8">
+      <div className="flex items-center gap-2">
+        <input
+          type="url"
+          value={url}
+          onChange={(e) => setUrl(e.target.value)}
+          placeholder="URL을 입력하세요"
+          className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          required
+        />
+        <button
+          type="submit"
+          className="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+          aria-label="URL 분석하기"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+          </svg>
+        </button>
+      </div>
+    </form>
+  );
+};
 
 const VideoSection: React.FC<VideoSectionProps> = ({
   title,
@@ -214,6 +254,8 @@ const Contents: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 p-4 flex flex-col">
+      <SearchBar />
+      
       <VideoSection
         title="Live Academy - 라이브 스트리밍"
         videos={lvAcademyVideos}
