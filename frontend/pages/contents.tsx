@@ -1,227 +1,48 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { format } from 'date-fns';
-import { useRouter } from 'next/router';
+import { useRef } from 'react';
+import VideoSlider from "@/components/VideoSlider";
+import { getContents } from '@/services/api';
 
-interface VideoItem {
-  id: string;
-  originalTitle: string;
-  videoUrl: string;
-  publishedAt?: string;
-}
 
-interface NewsItem {
-  id: string;
-  originalTitle: string;
-  videoUrl: string;
-  publishedAt?: string;
-}
-
-interface VideoSectionProps {
-  title: string;
-  videos: VideoItem[];
-  scrollRef: React.RefObject<HTMLDivElement>;
-  onScrollLeft: () => void;
-  onScrollRight: () => void;
-}
-
-interface NewsSectionProps {
-  title: string;
-  articles: NewsItem[];
-}
-
-const SearchBar: React.FC = () => {
-  const [url, setUrl] = useState('');
-  const router = useRouter();
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (url.trim()) {
-      router.push({
-        pathname: '/',
-        query: { url: url.trim() }
-      });
-    }
-  };
-
-  return (
-    <form onSubmit={handleSubmit} className="mb-8">
-      <div className="flex items-center gap-2">
-        <input
-          type="url"
-          value={url}
-          onChange={(e) => setUrl(e.target.value)}
-          placeholder="URL을 입력하세요"
-          className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          required
-        />
-        <button
-          type="submit"
-          className="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
-          aria-label="URL 분석하기"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-          </svg>
-        </button>
-      </div>
-    </form>
-  );
-};
-
-const VideoSection: React.FC<VideoSectionProps> = ({
-  title,
-  videos,
-  scrollRef,
-  onScrollLeft,
-  onScrollRight,
-}) => {
-  const isNewContent = (date: string | undefined) => {
-    if (!date) return false;
-    const contentDate = new Date(date);
-    const now = new Date();
-    const diffDays = Math.floor((now.getTime() - contentDate.getTime()) / (1000 * 60 * 60 * 24));
-    return diffDays <= 7;
-  };
-
-  return (
-    <section className="mb-8">
-      <h2 className="text-2xl font-bold mb-4">{title}</h2>
-      <div className="relative">
-        <button 
-          onClick={onScrollLeft}
-          className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white/80 p-2 rounded-full shadow hover:bg-white"
-          aria-label="Scroll left"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
-        </button>
-        
-        <div 
-          ref={scrollRef} 
-          className="overflow-x-auto flex gap-4 pb-4 scroll-smooth" 
-          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-        >
-          {videos.length > 0 ? (
-            videos.map((video) => (
-              <div key={video.id} className="flex-none w-64">
-                <div className="relative">
-                  <img
-                    src={video.videoUrl}
-                    alt={video.originalTitle}
-                    className="w-full h-36 object-cover rounded-lg"
-                  />
-                  {isNewContent(video.publishedAt) && (
-                    <span className="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded-full text-sm">
-                      New
-                    </span>
-                  )}
-                </div>
-                <h3 className="mt-2 font-semibold line-clamp-2">{video.originalTitle}</h3>
-                {video.publishedAt && (
-                  <p className="text-sm text-gray-600">
-                    {format(new Date(video.publishedAt), 'yyyy-MM-dd')}
-                  </p>
-                )}
-              </div>
-            ))
-          ) : (
-            <div className="w-full text-center py-8">
-              <p className="text-gray-500">현재 라이브 방송 중인 컨텐츠가 없습니다.</p>
-            </div>
-          )}
-        </div>
-        
-        <button 
-          onClick={onScrollRight}
-          className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white/80 p-2 rounded-full shadow hover:bg-white"
-          aria-label="Scroll right"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-          </svg>
-        </button>
-      </div>
-    </section>
-  );
-};
-
-const NewsSection: React.FC<NewsSectionProps> = ({ title, articles }) => {
-  return (
-    <section className="flex-grow">
-      <h2 className="text-2xl font-bold mb-4">{title}</h2>
-      <div className="bg-white rounded-lg shadow">
-        <ul className="divide-y divide-gray-200">
-          {articles.length > 0 ? (
-            articles.map((article) => (
-              <li key={article.id} className="p-4 hover:bg-gray-50 transition-colors">
-                <a
-                  href={article.videoUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block"
-                >
-                  <h3 className="text-lg font-medium text-gray-900 hover:text-blue-600">
-                    {article.originalTitle}
-                  </h3>
-                  {article.publishedAt && (
-                    <p className="text-sm text-gray-500 mt-1">
-                      {format(new Date(article.publishedAt), 'yyyy-MM-dd')}
-                    </p>
-                  )}
-                </a>
-              </li>
-            ))
-          ) : (
-            <li className="p-8 text-center text-gray-500">
-              사용 가능한 뉴스 기사가 없습니다.
-            </li>
-          )}
-        </ul>
-      </div>
-    </section>
-  );
-};
-
-const Contents: React.FC = () => {
-  const [lvAcademyVideos, setLvAcademyVideos] = useState<VideoItem[]>([]);
-  const [toddlerVideos, setToddlerVideos] = useState<VideoItem[]>([]);
-  const [newsArticles, setNewsArticles] = useState<NewsItem[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  
+const contents: React.FC = () => {
+  // 샘플 비디오 데이터
+  const lvAcademyVideos = [
+    {
+      videoID: "1",
+      channelID: "channel1",
+      title: "영어 회화 기초 강의",
+      description: "기초 영어 회화를 배워보세요",
+      thumbnailUrl: "https://i.ytimg.com/vi/bTw5L_r4nHE/hqdefault.jpg",
+      publishedAt: "2024-03-20"
+    },
+    {
+      videoID: "2",
+      channelID: "channel1",
+      title: "영어 회화 기초 강의 2",
+      description: "기초 영어 회화를 배워보세요",
+      thumbnailUrl: "https://i.ytimg.com/vi/bTw5L_r4nHE/hqdefault.jpg",
+      publishedAt: "2024-03-20"
+    },
+    {
+      videoID: "3",
+      channelID: "channel1",
+      title: "영어 회화 기초 강의 3 ",
+      description: "기초 영어 회화를 배워보세요",
+      thumbnailUrl: "https://i.ytimg.com/vi/bTw5L_r4nHE/hqdefault.jpg",
+      publishedAt: "2024-03-20"
+    },
+    {
+      videoID: "4",
+      channelID: "channel1",
+      title: "영어 회화 기초 강의 4",
+      description: "기초 영어 회화를 배워보세요",
+      thumbnailUrl: "https://i.ytimg.com/vi/bTw5L_r4nHE/hqdefault.jpg",
+      publishedAt: "2024-03-20"
+    },
+  ];
+  // 스크롤 참조 생성
   const lvAcademyScrollRef = useRef<HTMLDivElement>(null);
-  const toddlerScrollRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        
-        const lvAcademyResponse = await fetch('http://localhost:8080/api/contents?sourceType=lv-academy');
-        const lvAcademyData = await lvAcademyResponse.json();
-        setLvAcademyVideos(lvAcademyData);
-
-        const toddlerResponse = await fetch('http://localhost:8080/api/contents?sourceType=lv-academy-toddler');
-        const toddlerData = await toddlerResponse.json();
-        setToddlerVideos(toddlerData);
-
-        const newsResponse = await fetch('http://localhost:8080/api/contents?sourceType=ybm-cnn');
-        const newsData = await newsResponse.json();
-        setNewsArticles(newsData);
-
-        setError(null);
-      } catch (err) {
-        setError('데이터를 불러오는 중 오류가 발생했습니다.');
-        console.error('Data fetching error:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
-
+  // 스크롤 함수들
   const scrollLeft = (ref: React.RefObject<HTMLDivElement>) => {
     if (ref.current) {
       ref.current.scrollBy({ left: -300, behavior: 'smooth' });
@@ -234,50 +55,17 @@ const Contents: React.FC = () => {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900" role="status">
-          <span className="sr-only">로딩 중...</span>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-red-500 text-xl">{error}</div>
-      </div>
-    );
-  }
-
   return (
-    <div className="min-h-screen bg-gray-100 p-4 flex flex-col">
-      <SearchBar />
-      
-      <VideoSection
+    <div className="container mx-auto px-4 py-8">
+      <VideoSlider
         title="Live Academy - 라이브 스트리밍"
         videos={lvAcademyVideos}
         scrollRef={lvAcademyScrollRef}
         onScrollLeft={() => scrollLeft(lvAcademyScrollRef)}
         onScrollRight={() => scrollRight(lvAcademyScrollRef)}
       />
-
-      <VideoSection
-        title="Live Academy Toddler - 라이브 스트리밍"
-        videos={toddlerVideos}
-        scrollRef={toddlerScrollRef}
-        onScrollLeft={() => scrollLeft(toddlerScrollRef)}
-        onScrollRight={() => scrollRight(toddlerScrollRef)}
-      />
-
-      <NewsSection
-        title="YBM CNN News 최신 기사"
-        articles={newsArticles}
-      />
     </div>
   );
 };
 
-export default Contents; 
+export default contents; 

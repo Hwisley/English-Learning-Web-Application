@@ -1,37 +1,12 @@
+import { Video } from '../types/video';
+
 // API 기본 URL 설정
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api';
-
-// 비디오 데이터 타입 정의
-export interface Video {
-  id: string;
-  title: string;
-  thumbnail: string;
-  channelName?: string;
-  isLive?: boolean;
-  publishedAt: string;
-}
-
-// 문장 데이터 타입 정의
-export interface Sentence {
-  time?: number;
-  timestamp?: number;
-  english: string;
-  korean: string;
-}
-
-// 비디오 상세 정보 타입 정의
-export interface VideoDetail {
-  id: string;
-  title: string;
-  description: string;
-  videoUrl: string;
-  thumbnailUrl: string;
-  publishedAt: string;
-  sentences: Sentence[];
-}
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+const USE_MOCK_DATA = process.env.NEXT_PUBLIC_USE_MOCK_DATA;
 
 // API 요청용 헬퍼 함수
 async function fetchApi<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
+  // 실제 API 호출
   const response = await fetch(`${API_BASE_URL}${endpoint}`, {
     headers: {
       'Content-Type': 'application/json',
@@ -48,29 +23,24 @@ async function fetchApi<T>(endpoint: string, options: RequestInit = {}): Promise
   return response.json();
 }
 
-// 모든 비디오 목록 가져오기
-export async function getAllVideos(): Promise<{ lvAcademy: Video[], toddler: Video[] }> {
-  return fetchApi<{ lvAcademy: Video[], toddler: Video[] }>('/videos');
-}
-
-// 특정 카테고리의 비디오 목록 가져오기
-export async function getVideosByCategory(category: string): Promise<Video[]> {
-  return fetchApi<Video[]>(`/videos/category/${category}`);
-}
-
-// 비디오 상세 정보 가져오기
-export async function getVideoById(id: string): Promise<VideoDetail> {
-  return fetchApi<VideoDetail>(`/videos/${id}`);
-}
-
-// 비디오의 이중 언어 문장 목록 가져오기
-export async function getVideoSentences(id: string): Promise<Sentence[]> {
-  return fetchApi<Sentence[]>(`/videos/${id}/sentences`);
+// 컨텐츠 목록 가져오기
+export function getContents(apiUrl: string) {
+  if (USE_MOCK_DATA === 'true') {
+    // 모의 데이터 직접 반환
+    return [
+      {
+        videoID: "1",
+        channelID: "channel1",
+        title: "영어 회화 기초 강의",
+        description: "기초 영어 회화를 배워보세요",
+        thumbnailUrl: "https://i.ytimg.com/vi/bTw5L_r4nHE/hqdefault.jpg",
+        publishedAt: "2024-03-20"
+      }
+    ];
+  }
+  return fetchApi<Video[]>(`${apiUrl}`);
 }
 
 export default {
-  getAllVideos,
-  getVideosByCategory,
-  getVideoById,
-  getVideoSentences,
-}; 
+  getContents,
+};
