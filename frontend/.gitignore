@@ -61,3 +61,5 @@ postcss.config.js
 
 # etc
 .next/
+__mocks__/
+__tests__/
