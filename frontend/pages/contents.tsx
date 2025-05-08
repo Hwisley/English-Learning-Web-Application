@@ -23,6 +23,11 @@ interface VideoSectionProps {
   onScrollRight: () => void;
 }
 
+interface NewsSectionProps {
+  title: string;
+  articles: NewsItem[];
+}
+
 const VideoSection: React.FC<VideoSectionProps> = ({
   title,
   videos,
@@ -96,6 +101,43 @@ const VideoSection: React.FC<VideoSectionProps> = ({
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
           </svg>
         </button>
+      </div>
+    </section>
+  );
+};
+
+const NewsSection: React.FC<NewsSectionProps> = ({ title, articles }) => {
+  return (
+    <section className="flex-grow">
+      <h2 className="text-2xl font-bold mb-4">{title}</h2>
+      <div className="bg-white rounded-lg shadow">
+        <ul className="divide-y divide-gray-200">
+          {articles.length > 0 ? (
+            articles.map((article) => (
+              <li key={article.id} className="p-4 hover:bg-gray-50 transition-colors">
+                <a
+                  href={article.videoUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block"
+                >
+                  <h3 className="text-lg font-medium text-gray-900 hover:text-blue-600">
+                    {article.originalTitle}
+                  </h3>
+                  {article.publishedAt && (
+                    <p className="text-sm text-gray-500 mt-1">
+                      {format(new Date(article.publishedAt), 'yyyy-MM-dd')}
+                    </p>
+                  )}
+                </a>
+              </li>
+            ))
+          ) : (
+            <li className="p-8 text-center text-gray-500">
+              사용 가능한 뉴스 기사가 없습니다.
+            </li>
+          )}
+        </ul>
       </div>
     </section>
   );
@@ -188,39 +230,10 @@ const Contents: React.FC = () => {
         onScrollRight={() => scrollRight(toddlerScrollRef)}
       />
 
-      {/* [Group 3] YBM CNN News Article List */}
-      <section className="flex-grow">
-        <h2 className="text-2xl font-bold mb-4">YBM CNN News 최신 기사</h2>
-        <div className="bg-white rounded-lg shadow">
-          <ul className="divide-y divide-gray-200">
-            {newsArticles.length > 0 ? (
-              newsArticles.map((article) => (
-                <li key={article.id} className="p-4 hover:bg-gray-50 transition-colors">
-                  <a
-                    href={article.videoUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="block"
-                  >
-                    <h3 className="text-lg font-medium text-gray-900 hover:text-blue-600">
-                      {article.originalTitle}
-                    </h3>
-                    {article.publishedAt && (
-                      <p className="text-sm text-gray-500 mt-1">
-                        {format(new Date(article.publishedAt), 'yyyy-MM-dd')}
-                      </p>
-                    )}
-                  </a>
-                </li>
-              ))
-            ) : (
-              <li className="p-8 text-center text-gray-500">
-                사용 가능한 뉴스 기사가 없습니다.
-              </li>
-            )}
-          </ul>
-        </div>
-      </section>
+      <NewsSection
+        title="YBM CNN News 최신 기사"
+        articles={newsArticles}
+      />
     </div>
   );
 };
