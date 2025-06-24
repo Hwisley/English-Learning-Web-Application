@@ -1,25 +1,30 @@
-# IDE settings
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-## IntelliJ IDEA configuration files
-.idea/
-*.iml
-*.ipr
-*.iws
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
 
-## VS Code configuration files
-.vscode/
+# testing
+/coverage
 
-# OS-specific files
+# next.js
+/.next/
+/out/
 
-## macOS
+# production
+/build
+
+# misc
 .DS_Store
+*.pem
 
-## Windows
-Thumbs.db
-desktop.ini
-
-# Node.js dependencies
-node_modules/
+# debug
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
@@ -27,6 +32,29 @@ pnpm-debug.log*
 package-lock.json
 yarn.lock
 pnpm-lock.yaml
+
+# env files (can opt-in for committing if needed)
+.env*
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+*storybook.log
+storybook-static
+
+# etc
+.next/
+__mocks__/
+__tests__/
+.tailwind/
+.DS_Store
+.vscode/
+Thumbs.db
+desktop.ini
 
 # Build output
 dist/
@@ -36,30 +64,8 @@ build/
 .cache/
 .eslintcache
 
-# Environment configuration files
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-
-# Styling-related files
 *.css.map
-postcss.config.js
-
-# TypeScript-related files
+postcss.config.mjs
 *.tsbuildinfo
 *.d.ts
 *.d.ts.map
-
-# Tailwind CSS cache files
-.tailwind/
-
-# Vite-related files
-.vite/
-.vitepress/
-
-# etc
-.next/
-__mocks__/
-__tests__/

@@ -1,0 +1,65 @@
+# IDE settings
+
+## IntelliJ IDEA configuration files
+.idea/
+*.iml
+*.ipr
+*.iws
+
+## VS Code configuration files
+.vscode/
+
+# OS-specific files
+
+## macOS
+.DS_Store
+
+## Windows
+Thumbs.db
+desktop.ini
+
+# Node.js dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Build output
+dist/
+build/
+.out/
+.vite/
+.cache/
+.eslintcache
+
+# Environment configuration files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Styling-related files
+*.css.map
+postcss.config.js
+
+# TypeScript-related files
+*.tsbuildinfo
+*.d.ts
+*.d.ts.map
+
+# Tailwind CSS cache files
+.tailwind/
+
+# Vite-related files
+.vite/
+.vitepress/
+
+# etc
+.next/
+__mocks__/
+__tests__/
